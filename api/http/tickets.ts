@@ -1,7 +1,7 @@
 ﻿import Ticket from "../../models/Ticket";
-import { useKy } from "./base";
+import { apiClient } from "./base";
 import CreateTicketRequest from "../dtos/tickets";
-import { Operation } from "fast-json-patch";
+import { Operation } from "fast-json-patch"
 
 export interface TicketsApi {
     create: (ticket: CreateTicketRequest) => Promise<Ticket>;
@@ -11,7 +11,6 @@ export interface TicketsApi {
 }
 
 export default function useTickets (projectId: string): TicketsApi {
-    const apiClient = useKy();
     return {
         create: async (ticket) => {
             return await apiClient.post(`Projects/${projectId}/Tickets`, { json: ticket }).json<Ticket>();
