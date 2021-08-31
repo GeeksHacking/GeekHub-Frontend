@@ -6,10 +6,10 @@ import AppSidebarLink from "./AppSidebarLink";
 import { SettingsIcon } from "@chakra-ui/icons";
 import useProjects from "../../api/swr/projects/useProjects";
 
-export default function AppSidebar(): Nullable<ReactElement> {
+export default function AppSidebar (): Nullable<ReactElement> {
     const toast = useToast();
     const { data, error } = useProjects();
-    
+
     if (error) {
         toast({
             status: "error",
@@ -19,15 +19,15 @@ export default function AppSidebar(): Nullable<ReactElement> {
         });
         return null;
     }
-    
+
     if (!data) {
-        return <Spinner/>;
+        return <Spinner />;
     }
-    
+
     return (
         <Flex direction={"column"} alignItems={"flex-start"} p={3}>
             <Box style={{ flex: 1 }}>
-                <Input placeholder={"Search"}/>
+                <Input placeholder={"Search"} />
                 <Heading size={"md"} my={5}>Menu</Heading>
 
                 <AppSidebarLink to={"/app"}>Home</AppSidebarLink>
@@ -38,7 +38,7 @@ export default function AppSidebar(): Nullable<ReactElement> {
                     <AppSidebarLink key={project.id} to={`/app/projects/${project.id}`}>{project.name}</AppSidebarLink>
                 ))}
             </Box>
-            <IconButton aria-label={"settings"} icon={<SettingsIcon/>}/>
+            <IconButton aria-label={"settings"} icon={<SettingsIcon />} />
         </Flex>
     );
 }

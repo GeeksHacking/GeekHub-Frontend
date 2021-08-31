@@ -4,7 +4,7 @@ import { Box, Flex, Text, Heading, Spinner, useToast, Button } from "@chakra-ui/
 
 import Project from "../../../models/Project";
 import useTickets from "../../../api/swr/tickets/useTickets";
-import Ticket from "../../../models/ticket";
+import Ticket from "../../../models/Ticket";
 import TicketListItem from "./TicketListItem";
 import CreateTicketModal from "./CreateTicketModal";
 import UpdateTicketModal from "./UpdateTicketModal";

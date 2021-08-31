@@ -2,7 +2,7 @@ import * as React from "react";
 import { ReactElement } from "react";
 import { Avatar, Box, Flex, Spinner, Tag, TagLabel, Text, useColorModeValue, useToast } from "@chakra-ui/react";
 
-import Ticket from "../../../models/ticket";
+import Ticket from "../../../models/Ticket";
 import useProjectUser from "../../../api/swr/projects/useProjectUser";
 import TicketTypeTag from "./TicketTypeTag";
 

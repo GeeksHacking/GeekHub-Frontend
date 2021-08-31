@@ -1,4 +1,4 @@
-import Project from "../../models/project";
+import Project from "../../models/Project";
 import { apiClient } from "./base";
 
 import { CreateProjectRequest } from "../dtos/projects";
