@@ -1,7 +1,7 @@
 import ky from "ky";
 
 export const apiClient = ky.create({
-    prefixUrl: "https://geekhub.geekshacking.com/",
+    prefixUrl: "https://geekhub-api.geekshacking.com/",
     hooks: {
         afterResponse: [
             async (request, _options, response) => {
