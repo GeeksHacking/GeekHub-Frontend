@@ -2,7 +2,7 @@ import * as React from "react";
 import { ReactElement } from "react";
 import { Avatar, Box, Flex, Spinner, Tag, TagLabel, Text, useColorModeValue, useToast } from "@chakra-ui/react";
 
-import Ticket from "../../../models/Ticket";
+import Ticket from "../../../models/ticket";
 import useProjectUser from "../../../api/swr/projects/useProjectUser";
 import TicketTypeTag from "./TicketTypeTag";
 
@@ -12,7 +12,7 @@ export interface TicketListItemProps {
     onClick: () => void;
 }
 
-export default function TicketListItem(props: TicketListItemProps): Nullable<ReactElement> {
+export default function TicketListItem (props: TicketListItemProps): Nullable<ReactElement> {
     const { ticket, projectId, onClick } = props;
 
     const toast = useToast();
@@ -62,7 +62,7 @@ export default function TicketListItem(props: TicketListItemProps): Nullable<Rea
                 )}
             </Box>
             <Flex style={{ flex: 0.5 }} alignItems={"center"}>
-                <TicketTypeTag type={ticket.ticketType}/>
+                <TicketTypeTag type={ticket.ticketType} />
             </Flex>
         </Flex>
     );

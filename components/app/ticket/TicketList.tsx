@@ -4,7 +4,7 @@ import { Box, Flex, Text, Heading, Spinner, useToast, Button } from "@chakra-ui/
 
 import Project from "../../../models/Project";
 import useTickets from "../../../api/swr/tickets/useTickets";
-import Ticket from "../../../models/Ticket";
+import Ticket from "../../../models/ticket";
 import TicketListItem from "./TicketListItem";
 import CreateTicketModal from "./CreateTicketModal";
 import UpdateTicketModal from "./UpdateTicketModal";
@@ -13,7 +13,7 @@ export interface TicketListProps {
     project: Project;
 }
 
-export default function TicketList(props: TicketListProps): Nullable<ReactElement> {
+export default function TicketList (props: TicketListProps): Nullable<ReactElement> {
     const { project } = props;
 
     const toast = useToast();
@@ -44,7 +44,7 @@ export default function TicketList(props: TicketListProps): Nullable<ReactElemen
     }
 
     if (!data || !tickets) {
-        return <Spinner/>;
+        return <Spinner />;
     }
 
     const openCreateModal = () => setCreateModalOpen(true);
@@ -60,10 +60,10 @@ export default function TicketList(props: TicketListProps): Nullable<ReactElemen
 
     return (
         <Box height={"calc(100vh - 108px)"} maxHeight={"calc(100vh - 140px)"} overflowY={"scroll"}>
-            <CreateTicketModal projectId={project.id} isOpen={createModalOpen} onClose={closeCreateModal}/>
+            <CreateTicketModal projectId={project.id} isOpen={createModalOpen} onClose={closeCreateModal} />
             {updateModalOpen &&
-            <UpdateTicketModal projectId={project.id} ticketId={selectedTicketId} isOpen={updateModalOpen}
-                onClose={closeUpdateModal}/>}
+                <UpdateTicketModal projectId={project.id} ticketId={selectedTicketId} isOpen={updateModalOpen}
+                    onClose={closeUpdateModal} />}
             {Object.keys(tickets).map((type, idx) => (
                 <>
                     <Box key={idx} mt={3}>
@@ -76,10 +76,10 @@ export default function TicketList(props: TicketListProps): Nullable<ReactElemen
                         </Flex>
                         {tickets[type].map(ticket => (
                             <TicketListItem ticket={ticket} projectId={project.id}
-                                onClick={() => openUpdateModal(ticket.id)} key={ticket.id}/>
+                                onClick={() => openUpdateModal(ticket.id)} key={ticket.id} />
                         ))}
                     </Box>
-                    {idx === Object.keys(tickets).length - 1 && <Box h={20}/>}
+                    {idx === Object.keys(tickets).length - 1 && <Box h={20} />}
                 </>
             ))}
             <Box position={"absolute"} bottom={7} right={7}>
