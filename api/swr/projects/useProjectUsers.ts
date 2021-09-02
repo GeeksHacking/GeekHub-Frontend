@@ -1,7 +1,10 @@
-import useSWR, { SWRResponse } from "swr";
-import { fetcher } from "../fetcher";
-import User from "../../../models/User";
+import useSWR, {SWRResponse} from "swr";
 
-export default function useProjectUsers (projectId: string): SWRResponse<User[], Error> {
+import useFetcher from "../fetcher";
+import User from "../../../models/user";
+
+export default function useProjectUsers(projectId: string): SWRResponse<User[], Error> {
+    const fetcher = useFetcher()
+
     return useSWR<User[]>(`Projects/${projectId}/Users`, fetcher);
 }

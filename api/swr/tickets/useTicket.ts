@@ -1,7 +1,9 @@
-﻿import useSWR, { SWRResponse } from "swr";
-import Ticket from "../../../models/Ticket";
-import { fetcher } from "../fetcher";
+﻿import useSWR, {SWRResponse} from "swr";
 
-export default function useTicket (projectId: string, ticketId: string): SWRResponse<Ticket, Error> {
+import useFetcher from "../fetcher";
+import Ticket from "../../../models/ticket";
+
+export default function useTicket(projectId: string, ticketId: string): SWRResponse<Ticket, Error> {
+    const fetcher = useFetcher()
     return useSWR<Ticket>(`Projects/${projectId}/Tickets/${ticketId}`, fetcher);
 }

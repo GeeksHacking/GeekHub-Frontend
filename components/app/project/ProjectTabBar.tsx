@@ -1,7 +1,7 @@
 import * as React from "react";
-import { ReactElement, ReactNode } from "react";
+import {ReactElement, ReactNode} from "react";
 
-import { Tabs, TabList, TabPanels, Tab, TabPanel, Flex } from "@chakra-ui/react";
+import {Tab, TabList, TabPanel, TabPanels, Tabs} from "@chakra-ui/react";
 
 export interface ProjectTabBarProps {
     overview: ReactNode;
@@ -11,10 +11,10 @@ export interface ProjectTabBarProps {
 }
 
 export default function ProjectTabBar(props: ProjectTabBarProps): ReactElement {
-    const { overview, lists, kanban, calendar } = props;
+    const {overview, lists, kanban, calendar} = props;
 
     return (
-        <Tabs colorScheme={"teal"} style={{ flex: 1 }}>
+        <Tabs colorScheme={"teal"} style={{flex: 1}}>
             <TabList>
                 <Tab>Overview</Tab>
                 <Tab>Lists</Tab>

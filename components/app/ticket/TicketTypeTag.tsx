@@ -1,13 +1,13 @@
 import * as React from "react";
-import { ReactElement } from "react";
-import { Tag } from "@chakra-ui/react";
+import {ReactElement} from "react";
+import {Tag} from "@chakra-ui/react";
 
 export interface TicketTypeTagProps {
     type: string;
 }
 
-export default function TicketTypeTag (props: TicketTypeTagProps): ReactElement {
-    const { type } = props;
+export default function TicketTypeTag(props: TicketTypeTagProps): ReactElement {
+    const {type} = props;
     let color;
     switch (type) {
         case "Epic":

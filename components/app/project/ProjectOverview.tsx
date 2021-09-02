@@ -1,16 +1,15 @@
 import * as React from "react";
-import { ReactElement } from "react";
-import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import {ReactElement} from "react";
+import {Box, Button, Flex, Heading, Text} from "@chakra-ui/react";
 
-import Project from "../../../models/Project";
+import Project from "../../../models/project";
 
 export interface ProjectOverviewProps {
     project: Project;
 }
 
 export default function ProjectOverview(props: ProjectOverviewProps): ReactElement {
-    const { project } = props;
+    const {project} = props;
 
     return (
         <Box>

@@ -1,8 +1,11 @@
-import Project from "../../models/Project";
-import { apiClient } from "./base";
+import Project from "../../models/project";
+import apiClient from "./base";
 
-import { CreateProjectRequest } from "../dtos/projects";
+import {CreateProjectRequest} from "../dtos/projects";
 
-export async function create (project: CreateProjectRequest): Promise<Project> {
-    return await apiClient.post("Projects", { json: project }).json<Project>();
+export async function create(project: CreateProjectRequest, token: string): Promise<Project> {
+    return await apiClient.post("Projects", {
+        json: project,
+        headers: {Authorization: `Bearer ${token}`}
+    }).json<Project>();
 }

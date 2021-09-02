@@ -1,18 +1,21 @@
 import ky from "ky";
+import {useAuth0} from "@auth0/auth0-react";
 
-const useKy = (): typeof ky => {
+export const useApiClient = (): typeof ky => {
+    const {getAccessTokenSilently} = useAuth0()
+
     return ky.create({
-        prefixUrl: "https://geekhub-api.geekshacking.com/",
+        prefixUrl: process.env.NEXT_PUBLIC_API_URL,
         hooks: {
-            afterResponse: [
-                async (request, _options, response) => {
-                    if (response.status !== 401) return;
-
-                    return ky(request);
-                },
+            beforeRequest: [
+                async request => {
+                    const token = await getAccessTokenSilently({audience: "https://geekhub-api.geekshacking.com"})
+                    console.log(token)
+                    request.headers.set("Authorization", `Bearer ${token}`)
+                }
             ],
         },
     });
 }
 
-export const apiClient = useKy();
+export default ky.create({prefixUrl: process.env.NEXT_PUBLIC_API_URL})

@@ -1,8 +1,8 @@
 import * as React from "react";
-import { ReactElement } from "react";
-import { Avatar, Box, Flex, Spinner, Tag, TagLabel, Text, useColorModeValue, useToast } from "@chakra-ui/react";
+import {ReactElement} from "react";
+import {Avatar, Box, Flex, Tag, TagLabel, Text, useColorModeValue, useToast} from "@chakra-ui/react";
 
-import Ticket from "../../../models/Ticket";
+import Ticket from "../../../models/ticket";
 import useProjectUser from "../../../api/swr/projects/useProjectUser";
 import TicketTypeTag from "./TicketTypeTag";
 
@@ -12,13 +12,13 @@ export interface TicketListItemProps {
     onClick: () => void;
 }
 
-export default function TicketListItem (props: TicketListItemProps): Nullable<ReactElement> {
-    const { ticket, projectId, onClick } = props;
+export default function TicketListItem(props: TicketListItemProps): Nullable<ReactElement> {
+    const {ticket, projectId, onClick} = props;
 
     const toast = useToast();
     const bg = useColorModeValue("gray.100", "gray.700");
-    const { data: assignee, error: assigneeError } = useProjectUser(projectId, ticket.assigneeId);
-    const { data: reporter, error: reporterError } = useProjectUser(projectId, ticket.reporterId);
+    const {data: assignee, error: assigneeError} = useProjectUser(projectId, ticket.assigneeId);
+    const {data: reporter, error: reporterError} = useProjectUser(projectId, ticket.reporterId);
 
     if (assigneeError || reporterError) {
         toast({
@@ -32,10 +32,10 @@ export default function TicketListItem (props: TicketListItemProps): Nullable<Re
 
     return (
         <Flex bg={bg} boxShadow={"base"} px={5} py={2} my={1} h={12} borderRadius={"md"} onClick={onClick}>
-            <Text style={{ flex: 2 }}>
+            <Text style={{flex: 2}}>
                 {ticket.name}
             </Text>
-            <Box style={{ flex: 1 }}>
+            <Box style={{flex: 1}}>
                 {reporter && (
                     <Tag size="lg" colorScheme="red" borderRadius="full">
                         <Avatar
@@ -48,7 +48,7 @@ export default function TicketListItem (props: TicketListItemProps): Nullable<Re
                     </Tag>
                 )}
             </Box>
-            <Box style={{ flex: 1 }}>
+            <Box style={{flex: 1}}>
                 {assignee && (
                     <Tag size="lg" colorScheme="red" borderRadius="full">
                         <Avatar
@@ -61,8 +61,8 @@ export default function TicketListItem (props: TicketListItemProps): Nullable<Re
                     </Tag>
                 )}
             </Box>
-            <Flex style={{ flex: 0.5 }} alignItems={"center"}>
-                <TicketTypeTag type={ticket.ticketType} />
+            <Flex style={{flex: 0.5}} alignItems={"center"}>
+                <TicketTypeTag type={ticket.ticketType}/>
             </Flex>
         </Flex>
     );

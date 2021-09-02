@@ -1,22 +1,30 @@
 ﻿import * as React from "react";
-import { ChangeEvent, ReactElement, useMemo, useState } from "react";
+import {ChangeEvent, ReactElement, useMemo, useState} from "react";
 import {
-    Button, Flex,
-    FormControl, FormLabel, Input,
+    Button,
+    Flex,
+    FormControl,
+    FormLabel,
+    Input,
     Modal,
     ModalBody,
-    ModalContent, ModalFooter,
+    ModalContent,
+    ModalFooter,
     ModalHeader,
-    ModalOverlay, Select, Spinner, Textarea,
+    ModalOverlay,
+    Select,
+    Spinner,
+    Textarea,
     useToast,
     VStack
 } from "@chakra-ui/react";
-import { compare } from "fast-json-patch";
+import {compare} from "fast-json-patch";
 import useTickets from "../../../api/swr/tickets/useTickets";
-import ticketsApi from "../../../api/http/tickets";
+import useTicketsApi from "../../../api/http/tickets";
 import useTicketTypes from "../../../api/swr/tickets/useTicketTypes";
 import useTicketStatuses from "../../../api/swr/tickets/useTicketStatuses";
 import useProjectUsers from "../../../api/swr/projects/useProjectUsers";
+import {HTTPError} from "ky";
 
 export interface CreateTicketModalProps {
     projectId: string;
@@ -26,14 +34,14 @@ export interface CreateTicketModalProps {
 }
 
 export default function UpdateTicketModal(props: CreateTicketModalProps): Nullable<ReactElement> {
-    const { projectId, ticketId, isOpen, onClose } = props;
+    const {projectId, ticketId, isOpen, onClose} = props;
 
-    const { data: tickets, error: ticketsError, mutate } = useTickets(projectId);
-    const { data: ticketTypes, error: ticketTypesError } = useTicketTypes(projectId);
-    const { data: ticketStatuses, error: ticketStatusesError } = useTicketStatuses(projectId);
-    const { data: projectUsers, error: projectUsersError } = useProjectUsers(projectId);
+    const {data: tickets, error: ticketsError, mutate} = useTickets(projectId);
+    const {data: ticketTypes, error: ticketTypesError} = useTicketTypes(projectId);
+    const {data: ticketStatuses, error: ticketStatusesError} = useTicketStatuses(projectId);
+    const {data: projectUsers, error: projectUsersError} = useProjectUsers(projectId);
 
-    const { update } = ticketsApi(projectId);
+    const {update} = useTicketsApi(projectId);
     const toast = useToast();
 
     const ticket = useMemo(() => {
@@ -99,7 +107,7 @@ export default function UpdateTicketModal(props: CreateTicketModalProps): Nullab
                 return [...filteredTickets, updatedTicket];
             });
             onClose();
-        } catch (e) {
+        } catch (e: any) {
             const body = await e.response.json();
             toast({
                 status: "error",
@@ -117,7 +125,7 @@ export default function UpdateTicketModal(props: CreateTicketModalProps): Nullab
                 <ModalHeader>Update ticket</ModalHeader>
                 <ModalBody>
                     <Flex>
-                        <VStack spacing={"3"} mr={3} style={{ flex: 1 }}>
+                        <VStack spacing={"3"} mr={3} style={{flex: 1}}>
                             <FormControl isRequired>
                                 <FormLabel>Ticket name</FormLabel>
                                 <Input
@@ -143,7 +151,7 @@ export default function UpdateTicketModal(props: CreateTicketModalProps): Nullab
                                 </Select>
                             </FormControl>
                         </VStack>
-                        <VStack spacing={"3"} ml={1} style={{ flex: 1 }}>
+                        <VStack spacing={"3"} ml={1} style={{flex: 1}}>
                             <FormControl isRequired>
                                 <FormLabel>Ticket type</FormLabel>
                                 <Select placeholder="Select type" onChange={onTicketTypeChange}>

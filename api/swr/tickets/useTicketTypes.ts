@@ -1,8 +1,9 @@
-import ticketsApi from "../../http/tickets";
-import useSWR, { SWRResponse } from "swr";
+import useSWR, {SWRResponse} from "swr";
+
+import useTicketsApi from "../../http/tickets";
 
 export default function useTicketTypes(projectId: string): SWRResponse<string[], Error> {
-    const { types } = ticketsApi(projectId);
-    
+    const {types} = useTicketsApi(projectId);
+
     return useSWR(`Projects/${projectId}/Tickets/Types`, types);
 }
