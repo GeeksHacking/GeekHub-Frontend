@@ -1,44 +1,14 @@
 import * as React from "react";
-import {ReactElement} from "react";
 import type {NextPage} from "next";
 import Link from "next/link"
 
-import {UserProfile, useUser} from '@auth0/nextjs-auth0';
+import {useAuth0} from '@auth0/auth0-react';
 
-import {Box, Button, Flex, Heading, Spacer, Spinner, useToast} from "@chakra-ui/react";
-
-const UserBox = ({user}: { user?: UserProfile }): ReactElement => {
-    if (user) {
-        return (
-            <Link href={"/app"}>
-                <Button colorScheme={"teal"}>Web app</Button>
-            </Link>
-        )
-    }
-
-    return (
-        <>
-            <Link href={"/api/auth/login"}>
-                <Button mr={4}>Log in</Button>
-            </Link>
-            <Link href={"/api/auth/login"}>
-                <Button colorScheme={"teal"}>
-                    Sign Up
-                </Button>
-            </Link>
-        </>
-    )
-}
+import {Box, Button, Flex, Heading, Spacer} from "@chakra-ui/react";
+import {useToken} from "../app/TokenContext";
 
 const LandingNavBar: NextPage = () => {
-    const toast = useToast()
-    const {user, error, isLoading} = useUser()
-
-    if (error) {
-        toast({
-            title: "An error occurred"
-        })
-    }
+    const {loginWithRedirect, isAuthenticated} = useAuth0()
 
     return (
         <Flex p={"3"} align="center">
@@ -47,10 +17,17 @@ const LandingNavBar: NextPage = () => {
             </Box>
             <Spacer/>
             <Box>
-                {isLoading ? (
-                    <Spinner/>
+                {isAuthenticated ? (
+                    <Link href={"/app"} passHref>
+                        <Button colorScheme={"teal"}>Web app</Button>
+                    </Link>
                 ) : (
-                    <UserBox user={user}/>
+                    <>
+                        <Button mr={4} onClick={loginWithRedirect}>Log in</Button>
+                        <Button colorScheme={"teal"} onClick={loginWithRedirect}>
+                            Sign Up
+                        </Button>
+                    </>
                 )}
             </Box>
         </Flex>

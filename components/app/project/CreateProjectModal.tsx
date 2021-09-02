@@ -17,6 +17,7 @@ import {
 
 import useProjects from "../../../api/swr/projects/useProjects";
 import {create} from "../../../api/http/projects";
+import {useToken} from "../TokenContext";
 
 export interface CreateProjectModalProps {
     isOpen: boolean;
@@ -28,6 +29,8 @@ export default function CreateProjectModal(props: CreateProjectModalProps): Reac
 
     const {mutate} = useProjects();
     const errorToast = useToast();
+
+    const token = useToken()
 
     const [projectName, setProjectName] = useState("");
     const [projectDescription, setProjectDescription] = useState("");
@@ -44,7 +47,7 @@ export default function CreateProjectModal(props: CreateProjectModalProps): Reac
                     name: projectName,
                     description: projectDescription,
                     repository: githubUrl
-                });
+                }, token);
                 return [...(projects ?? []), project];
             });
             onClose();
