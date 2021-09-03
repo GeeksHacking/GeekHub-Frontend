@@ -24,11 +24,11 @@ export default function TicketList(props: TicketListProps): Nullable<ReactElemen
     const [updateModalOpen, setUpdateModalOpen] = useState(false);
     const tickets = useMemo(() => {
         if (!data) return;
-        return data.reduce((a: Record<string, Ticket[]>, t) => {
-            if (!a[t.ticketStatus]) {
-                a[t.ticketStatus] = [];
+        return data.data.reduce((a: Record<string, Ticket[]>, t) => {
+            if (!a[t.status]) {
+                a[t.status] = [];
             }
-            a[t.ticketStatus].push(t);
+            a[t.status].push(t);
             return a;
         }, {});
     }, [data]);

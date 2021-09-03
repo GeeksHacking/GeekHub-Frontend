@@ -34,7 +34,7 @@ export default function AppSidebar(): Nullable<ReactElement> {
                 <AppSidebarLink to={"/app/projects"}>Projects</AppSidebarLink>
 
                 <Heading size={"md"} my={5}>My projects</Heading>
-                {data.map(project => (
+                {data.data.map(project => (
                     <AppSidebarLink key={project.id} to={`/app/projects/${project.id}`}>{project.name}</AppSidebarLink>
                 ))}
             </Box>

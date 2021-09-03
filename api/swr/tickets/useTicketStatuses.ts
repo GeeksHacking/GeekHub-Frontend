@@ -2,8 +2,8 @@ import useSWR, {SWRResponse} from "swr";
 
 import useTicketsApi from "../../http/tickets";
 
-export default function useTicketStatuses(projectId: string): SWRResponse<string[], Error> {
+export default function useTicketStatuses(projectId: string): SWRResponse<ServerData<string[]>, Error> {
     const {statuses} = useTicketsApi(projectId);
 
-    return useSWR(`Projects/${projectId}/Tickets/Statuses`, statuses);
+    return useSWR(`projects/${projectId}/tickets/statuses`, statuses);
 }

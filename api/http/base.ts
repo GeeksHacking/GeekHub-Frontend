@@ -10,7 +10,6 @@ export const useApiClient = (): typeof ky => {
             beforeRequest: [
                 async request => {
                     const token = await getAccessTokenSilently({audience: "https://geekhub-api.geekshacking.com"})
-                    console.log(token)
                     request.headers.set("Authorization", `Bearer ${token}`)
                 }
             ],

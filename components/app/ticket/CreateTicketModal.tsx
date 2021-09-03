@@ -47,7 +47,7 @@ export default function CreateTicketModal(props: CreateTicketModalProps): Nullab
     const [ticketStatus, setTicketStatus] = useState("");
     const [reporterId, setReporterId] = useState("");
     const [assigneeId, setAssigneeId] = useState("");
-    const [parentTicketId, setParentTicketId] = useState("");
+    const [parentTicketId, setParentTicketId] = useState(0);
 
     if (ticketsError || ticketTypesError || ticketStatusesError || projectUsersError) {
         toast({
@@ -69,30 +69,29 @@ export default function CreateTicketModal(props: CreateTicketModalProps): Nullab
     const onTicketStatusChange = (event: ChangeEvent<HTMLSelectElement>) => setTicketStatus(event.target.value);
     const onReporterIdChange = (event: ChangeEvent<HTMLSelectElement>) => setReporterId(event.target.value);
     const onAssigneeIdChange = (event: ChangeEvent<HTMLSelectElement>) => setAssigneeId(event.target.value);
-    const onParentTicketIdChange = (event: ChangeEvent<HTMLSelectElement>) => setParentTicketId(event.target.value);
+    const onParentTicketIdChange = (event: ChangeEvent<HTMLSelectElement>) => setParentTicketId(parseInt(event.target.value));
 
     const createProject = async () => {
         try {
-            await mutate(async (tickets) => {
-                const project = await create({
+            await mutate(async (s) => {
+                const {data: tickets} = s ?? {data: []}
+                const {data: ticket} = await create({
                     name,
                     description,
-                    ticketType,
-                    ticketStatus,
+                    type: ticketType,
+                    status: ticketStatus,
                     reporterId,
                     assigneeId,
                     parentTicketId
                 });
-                return [...(tickets ?? []), project];
+                return {"data": [...(tickets ?? []), ticket]};
             });
             onClose();
         } catch (e: any) {
-            const body = await e.response.json();
             toast({
                 status: "error",
                 isClosable: true,
-                title: body.title,
-                description: Object.keys(body.errors).reduce((a, k) => `${a}\n${k}: ${body.errors[k]}`, "")
+                description: e.description
             });
         }
     };
@@ -124,7 +123,7 @@ export default function CreateTicketModal(props: CreateTicketModalProps): Nullab
                             <FormControl>
                                 <FormLabel>Parent ticket</FormLabel>
                                 <Select placeholder="Nest this ticket" onChange={onParentTicketIdChange}>
-                                    {tickets.map((ticket, idx) => (
+                                    {tickets.data.map((ticket, idx) => (
                                         <option key={idx} value={ticket.id}>{ticket.name}</option>
                                     ))}
                                 </Select>
@@ -134,7 +133,7 @@ export default function CreateTicketModal(props: CreateTicketModalProps): Nullab
                             <FormControl isRequired>
                                 <FormLabel>Ticket type</FormLabel>
                                 <Select placeholder="Select type" onChange={onTicketTypeChange}>
-                                    {ticketTypes.map((type, idx) => (
+                                    {ticketTypes.data.map((type, idx) => (
                                         <option key={idx} value={type}>{type}</option>
                                     ))}
                                 </Select>
@@ -142,7 +141,7 @@ export default function CreateTicketModal(props: CreateTicketModalProps): Nullab
                             <FormControl isRequired>
                                 <FormLabel>Ticket status</FormLabel>
                                 <Select placeholder="Select status" onChange={onTicketStatusChange}>
-                                    {ticketStatuses.map((status, idx) => (
+                                    {ticketStatuses.data.map((status, idx) => (
                                         <option key={idx} value={status}>{status}</option>
                                     ))}
                                 </Select>
@@ -150,7 +149,7 @@ export default function CreateTicketModal(props: CreateTicketModalProps): Nullab
                             <FormControl>
                                 <FormLabel>Assigned to</FormLabel>
                                 <Select placeholder="Assign this ticket" onChange={onAssigneeIdChange}>
-                                    {projectUsers.map((user, idx) => (
+                                    {projectUsers.data.map((user, idx) => (
                                         <option key={idx} value={user.id}>{user.displayName}</option>
                                     ))}
                                 </Select>
@@ -158,7 +157,7 @@ export default function CreateTicketModal(props: CreateTicketModalProps): Nullab
                             <FormControl>
                                 <FormLabel>Reported by</FormLabel>
                                 <Select placeholder="Select a reporter" onChange={onReporterIdChange}>
-                                    {projectUsers.map((user, idx) => (
+                                    {projectUsers.data.map((user, idx) => (
                                         <option key={idx} value={user.id}>{user.displayName}</option>
                                     ))}
                                 </Select>

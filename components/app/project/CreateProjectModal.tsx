@@ -42,22 +42,21 @@ export default function CreateProjectModal(props: CreateProjectModalProps): Reac
 
     const createProject = async () => {
         try {
-            await mutate(async (projects) => {
-                const project = await create({
+            await mutate(async (s) => {
+                const {data: projects} = s ?? {data: []}
+                const {data: project} = await create({
                     name: projectName,
                     description: projectDescription,
                     repository: githubUrl
                 }, token);
-                return [...(projects ?? []), project];
+                return {"data": [...(projects ?? []), project]};
             });
             onClose();
         } catch (e: any) {
-            const body = await e.response.json();
             errorToast({
                 status: "error",
                 isClosable: true,
-                title: body.title,
-                description: Object.keys(body.errors).reduce((a, k) => `${a}\n${k}: ${body.errors[k]}`, "")
+                description: e.description
             });
         }
     };

@@ -24,7 +24,6 @@ import useTicketsApi from "../../../api/http/tickets";
 import useTicketTypes from "../../../api/swr/tickets/useTicketTypes";
 import useTicketStatuses from "../../../api/swr/tickets/useTicketStatuses";
 import useProjectUsers from "../../../api/swr/projects/useProjectUsers";
-import {HTTPError} from "ky";
 
 export interface CreateTicketModalProps {
     projectId: string;
@@ -48,8 +47,8 @@ export default function UpdateTicketModal(props: CreateTicketModalProps): Nullab
         const placeholder = {
             name: "",
             description: "",
-            ticketType: "",
-            ticketStatus: "",
+            type: "",
+            status: "",
             reporterId: "",
             assigneeId: "",
             parentTicketId: ""
@@ -57,13 +56,13 @@ export default function UpdateTicketModal(props: CreateTicketModalProps): Nullab
         if (!tickets) {
             return placeholder;
         }
-        return tickets.find(t => t.id === ticketId) ?? placeholder;
+        return tickets.data.find(t => t.id === ticketId) ?? placeholder;
     }, [ticketId, tickets]);
 
     const [name, setName] = useState(ticket.name);
     const [description, setDescription] = useState(ticket.description);
-    const [ticketType, setTicketType] = useState(ticket.ticketType);
-    const [ticketStatus, setTicketStatus] = useState(ticket.ticketStatus);
+    const [type, setType] = useState(ticket.type);
+    const [status, setStatus] = useState(ticket.status);
     const [reporterId, setReporterId] = useState(ticket.reporterId);
     const [assigneeId, setAssigneeId] = useState(ticket.assigneeId);
     const [parentTicketId, setParentTicketId] = useState(ticket.parentTicketId);
@@ -84,27 +83,28 @@ export default function UpdateTicketModal(props: CreateTicketModalProps): Nullab
 
     const onNameChange = (event: ChangeEvent<HTMLInputElement>) => setName(event.target.value);
     const onDescriptionChange = (event: ChangeEvent<HTMLTextAreaElement>) => setDescription(event.target.value);
-    const onTicketTypeChange = (event: ChangeEvent<HTMLSelectElement>) => setTicketType(event.target.value);
-    const onTicketStatusChange = (event: ChangeEvent<HTMLSelectElement>) => setTicketStatus(event.target.value);
+    const onTicketTypeChange = (event: ChangeEvent<HTMLSelectElement>) => setType(event.target.value);
+    const onTicketStatusChange = (event: ChangeEvent<HTMLSelectElement>) => setStatus(event.target.value);
     const onReporterIdChange = (event: ChangeEvent<HTMLSelectElement>) => setReporterId(event.target.value);
     const onAssigneeIdChange = (event: ChangeEvent<HTMLSelectElement>) => setAssigneeId(event.target.value);
     const onParentTicketIdChange = (event: ChangeEvent<HTMLSelectElement>) => setParentTicketId(event.target.value);
 
     const createProject = async () => {
         try {
-            await mutate(async (tickets) => {
-                const updatedTicket = await update(ticketId, compare(ticket, {
+            await mutate(async (s) => {
+                const {data: tickets} = s ?? {data: []}
+                const {data: updatedTicket} = await update(ticketId, compare(ticket, {
                     id: ticketId,
                     name,
                     description,
-                    ticketType,
-                    ticketStatus,
+                    type,
+                    status,
                     reporterId,
                     assigneeId,
                     parentTicketId
                 }));
                 const filteredTickets = (tickets ?? []).filter(t => t.id !== updatedTicket.id);
-                return [...filteredTickets, updatedTicket];
+                return {"data": [...filteredTickets, updatedTicket]};
             });
             onClose();
         } catch (e: any) {
@@ -145,7 +145,7 @@ export default function UpdateTicketModal(props: CreateTicketModalProps): Nullab
                             <FormControl>
                                 <FormLabel>Parent ticket</FormLabel>
                                 <Select placeholder="Nest this ticket" onChange={onParentTicketIdChange}>
-                                    {tickets.map((ticket, idx) => (
+                                    {tickets.data.map((ticket, idx) => (
                                         <option key={idx} value={ticket.id}>{ticket.name}</option>
                                     ))}
                                 </Select>
@@ -155,7 +155,7 @@ export default function UpdateTicketModal(props: CreateTicketModalProps): Nullab
                             <FormControl isRequired>
                                 <FormLabel>Ticket type</FormLabel>
                                 <Select placeholder="Select type" onChange={onTicketTypeChange}>
-                                    {ticketTypes.map((type, idx) => (
+                                    {ticketTypes.data.map((type, idx) => (
                                         <option key={idx} value={type}>{type}</option>
                                     ))}
                                 </Select>
@@ -163,7 +163,7 @@ export default function UpdateTicketModal(props: CreateTicketModalProps): Nullab
                             <FormControl isRequired>
                                 <FormLabel>Ticket status</FormLabel>
                                 <Select placeholder="Select status" onChange={onTicketStatusChange}>
-                                    {ticketStatuses.map((status, idx) => (
+                                    {ticketStatuses.data.map((status, idx) => (
                                         <option key={idx} value={status}>{status}</option>
                                     ))}
                                 </Select>
@@ -171,7 +171,7 @@ export default function UpdateTicketModal(props: CreateTicketModalProps): Nullab
                             <FormControl>
                                 <FormLabel>Assigned to</FormLabel>
                                 <Select placeholder="Assign this ticket" onChange={onAssigneeIdChange}>
-                                    {projectUsers.map((user, idx) => (
+                                    {projectUsers.data.map((user, idx) => (
                                         <option key={idx} value={user.id}>{user.displayName}</option>
                                     ))}
                                 </Select>
@@ -179,7 +179,7 @@ export default function UpdateTicketModal(props: CreateTicketModalProps): Nullab
                             <FormControl>
                                 <FormLabel>Reported by</FormLabel>
                                 <Select placeholder="Select a reporter" onChange={onReporterIdChange}>
-                                    {projectUsers.map((user, idx) => (
+                                    {projectUsers.data.map((user, idx) => (
                                         <option key={idx} value={user.id}>{user.displayName}</option>
                                     ))}
                                 </Select>
@@ -188,7 +188,7 @@ export default function UpdateTicketModal(props: CreateTicketModalProps): Nullab
                     </Flex>
                 </ModalBody>
                 <ModalFooter>
-                    <Button onClick={createProject} isDisabled={!name || !ticketType || !ticketStatus}>Update</Button>
+                    <Button onClick={createProject} isDisabled={!name || !type || !status}>Update</Button>
                 </ModalFooter>
             </ModalContent>
         </Modal>

@@ -5,10 +5,10 @@ import {Operation} from "fast-json-patch"
 import {useToken} from "../../components/app/TokenContext";
 
 export interface TicketsApi {
-    create: (ticket: CreateTicketRequest) => Promise<Ticket>;
-    update: (id: string, ticket: Operation[]) => Promise<Ticket>;
-    types: () => Promise<string[]>;
-    statuses: () => Promise<string[]>;
+    create: (ticket: CreateTicketRequest) => Promise<ServerData<Ticket>>;
+    update: (id: string, ticket: Operation[]) => Promise<ServerData<Ticket>>;
+    types: () => Promise<ServerData<string[]>>;
+    statuses: () => Promise<ServerData<string[]>>;
 }
 
 export default function useTicketsApi(projectId: string): TicketsApi {
@@ -16,22 +16,22 @@ export default function useTicketsApi(projectId: string): TicketsApi {
 
     return {
         create: async (ticket) => {
-            return await apiClient.post(`Projects/${projectId}/Tickets`, {
+            return await apiClient.post(`projects/${projectId}/tickets`, {
                 json: ticket,
                 headers: {Authorization: `Bearer ${token}`}
-            }).json<Ticket>();
+            }).json();
         },
         update: async (id, ticket) => {
-            return await apiClient.patch(`Projects/${projectId}/Tickets/${id}`, {
+            return await apiClient.patch(`projects/${projectId}/tickets/${id}`, {
                 json: ticket,
                 headers: {Authorization: `Bearer ${token}`}
-            }).json<Ticket>();
+            }).json();
         },
         types: async () => {
-            return await apiClient.get(`Projects/${projectId}/Tickets/Types`, {headers: {Authorization: `Bearer ${token}`}}).json<string[]>();
+            return await apiClient.get(`projects/${projectId}/tickets/types`, {headers: {Authorization: `Bearer ${token}`}}).json();
         },
         statuses: async () => {
-            return await apiClient.get(`Projects/${projectId}/Tickets/Statuses`, {headers: {Authorization: `Bearer ${token}`}}).json<string[]>();
+            return await apiClient.get(`projects/${projectId}/tickets/statuses`, {headers: {Authorization: `Bearer ${token}`}}).json();
         }
     };
 }
